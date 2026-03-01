@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import API from "@/lib/api";
 import { Card, CardContent } from "@/components/ui/card";
@@ -68,18 +68,16 @@ function Students() {
 
   // Delete student
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this student?")) {
-      const token = localStorage.getItem("token");
-      if (token) {
-        API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      }
-      try {
-        await API.delete(`/students/${id}`);
-        fetchStudents();
-        toast.success("Student deleted successfully!");
-      } catch (error: any) {
-        toast("Error deleting student");
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+    try {
+      await API.delete(`/students/${id}`);
+      fetchStudents();
+      toast.success("Student deleted successfully!");
+    } catch (error: any) {
+      toast("Error deleting student");
     }
   };
 
@@ -112,7 +110,7 @@ function Students() {
         department: editDepartment,
         year: editYear,
         phone: editPhone,
-        parentPhone: editParentPhone
+      
       });
       setShowEditModal(false);
       fetchStudents();
@@ -141,24 +139,23 @@ function Students() {
     fetchStudents();
   }, []);
 
-  const filteredStudents = students.filter((student) => {
+  const filteredStudents = useMemo(() => students.filter((student) => {
     const matchesSearch =
       !search ||
       student.user.name.toLowerCase().includes(search.toLowerCase()) ||
       student.user.email.toLowerCase().includes(search.toLowerCase());
     const matchesDepartment = !departmentFilter || student.department === departmentFilter;
     const matchesYear = !yearFilter || student.year?.toString() === yearFilter;
-    const matchesFeeStatus = !feeStatusFilter || student.feeStatus === feeStatusFilter;
+    const matchesFeeStatus = !feeStatusFilter || (student.feeStatus || "unpaid") === feeStatusFilter;
     return matchesSearch && matchesDepartment && matchesYear && matchesFeeStatus;
-  });
+  }), [students, search, departmentFilter, yearFilter, feeStatusFilter]);
 
   const getFeeStatusBadge = (status: string) => {
     const variants: any = {
-      paid: { variant: "default", className: "bg-green-50 text-green-700 border border-green-200" },
-      pending: { variant: "default", className: "bg-yellow-50 text-yellow-700 border border-yellow-200" },
-      overdue: { variant: "default", className: "bg-red-50 text-red-700 border border-red-200" },
+      paid: { variant: "default", className: "bg-green-900 text-green-200 border border-green-700" },
+      unpaid: { variant: "default", className: "bg-red-900 text-red-200 border border-red-700" },
     };
-    const config = variants[status] || variants.pending;
+    const config = variants[status] || variants.unpaid;
     return (
       <Badge className={config.className}>
         {status}
@@ -168,277 +165,244 @@ function Students() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-12 h-12 border-4 border-[#4f46e5] border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Card className="w-full max-w-md border border-red-200 bg-red-50">
-          <CardContent className="text-center p-6">
-            <div className="text-red-600 font-medium mb-2">Access Denied</div>
-            <p className="text-red-700 text-sm">{error}</p>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="bg-red-900 border border-red-700 text-red-200 p-6 rounded-xl max-w-md">
+          <div className="text-center">
+            <div className="text-red-200 font-medium mb-2">Access Denied</div>
+            <p className="text-red-300 text-sm">{error}</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2">Student Management</h1>
-          <p className="text-[#64748b]">Manage student records and assignments</p>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="space-y-8 p-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">Student Management</h1>
+            <p className="text-gray-400 text-lg">Manage student records and assignments</p>
+          </div>
+          <Link href="/warden/students/new">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+              <Plus className="w-5 h-5 mr-2" />
+              Add Student
+            </Button>
+          </Link>
         </div>
-        <Link href="/warden/students/new">
-          <Button className="bg-[#4f46e5] hover:bg-[#4338ca] text-white rounded-xl">
-            <Plus className="w-5 h-5 mr-2" />
-            Add Student
-          </Button>
-        </Link>
-      </div>
 
-      {/* Filters */}
-      <Card className="border-[#e2e8f0] bg-white/70 backdrop-blur-sm">
-        <CardContent className="p-6">
+        {/* Filters */}
+        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#64748b]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 placeholder="Search students..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-12 border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
+                className="pl-12 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <Select value={departmentFilter || "all"} onValueChange={(value) => setDepartmentFilter(value === "all" ? "" : value)}>
-              <SelectTrigger className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]">
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="All Departments" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Departments</SelectItem>
-                <SelectItem value="CSE">CSE</SelectItem>
-                <SelectItem value="ECE">ECE</SelectItem>
-                <SelectItem value="ME">ME</SelectItem>
-                <SelectItem value="CE">CE</SelectItem>
-                <SelectItem value="IT">IT</SelectItem>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="all" className="text-white hover:bg-gray-600">All Departments</SelectItem>
+                <SelectItem value="Computer Science" className="text-white hover:bg-gray-600">CSE</SelectItem>
+                <SelectItem value="Electrical Engineering" className="text-white hover:bg-gray-600">ECE</SelectItem>
+                <SelectItem value="Electrical Engineering" className="text-white hover:bg-gray-600">EEE</SelectItem>
+                <SelectItem value="Mechanical Engineering" className="text-white hover:bg-gray-600">ME</SelectItem>
+                <SelectItem value="Civil Engineering" className="text-white hover:bg-gray-600">CE</SelectItem>
               </SelectContent>
             </Select>
             <Select value={yearFilter || "all"} onValueChange={(value) => setYearFilter(value === "all" ? "" : value)}>
-              <SelectTrigger className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]">
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="All Years" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Years</SelectItem>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="all" className="text-white hover:bg-gray-600">All Years</SelectItem>
+                <SelectItem value="1" className="text-white hover:bg-gray-600">1st Year</SelectItem>
+                <SelectItem value="2" className="text-white hover:bg-gray-600">2nd Year</SelectItem>
+                <SelectItem value="3" className="text-white hover:bg-gray-600">3rd Year</SelectItem>
+                <SelectItem value="4" className="text-white hover:bg-gray-600">4th Year</SelectItem>
               </SelectContent>
             </Select>
             <Select value={feeStatusFilter || "all"} onValueChange={(value) => setFeeStatusFilter(value === "all" ? "" : value)}>
-              <SelectTrigger className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]">
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="All Fee Status" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Fee Status</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="unpaid">Unpaid</SelectItem>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="all" className="text-white hover:bg-gray-600">All Status</SelectItem>
+                <SelectItem value="paid" className="text-white hover:bg-gray-600">Paid</SelectItem>
+                <SelectItem value="unpaid" className="text-white hover:bg-gray-600">Unpaid</SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Table */}
-      <Card className="border-[#e2e8f0] bg-white/70 backdrop-blur-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-[#f8fafc] hover:bg-[#f8fafc]">
-              <TableHead className="text-[#0a0a0a] font-semibold">Name</TableHead>
-              <TableHead className="text-[#0a0a0a] font-semibold">Email</TableHead>
-              <TableHead className="text-[#0a0a0a] font-semibold">Department</TableHead>
-              <TableHead className="text-[#0a0a0a] font-semibold">Year</TableHead>
-              <TableHead className="text-[#0a0a0a] font-semibold">Room</TableHead>
-              <TableHead className="text-[#0a0a0a] font-semibold">Fee Status</TableHead>
-              <TableHead className="text-[#0a0a0a] font-semibold">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredStudents.map((student: any) => (
-              <TableRow key={student._id} className="hover:bg-[#f8fafc] transition-colors">
-                <TableCell>
-                  <span className="font-medium text-[#0a0a0a]">{student.user.name}</span>
-                </TableCell>
-                <TableCell className="text-[#64748b]">{student.user.email}</TableCell>
-                <TableCell className="text-[#64748b]">{student.department || "-"}</TableCell>
-                <TableCell className="text-[#64748b]">Year {student.year || "-"}</TableCell>
-                <TableCell>
-                  {student.room ? (
-                    <span className="font-medium text-[#4f46e5]">
-                      {student.room.block}-{student.room.roomNumber}
-                    </span>
-                  ) : (
-                    <span className="text-[#64748b]">Unassigned</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Select
-                    value={student.feeStatus || "unpaid"}
-                    onValueChange={(value) => updateFeeStatus(student._id, value)}
-                  >
-                    <SelectTrigger className="w-28 border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]">
+        {/* Table */}
+        <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-700 hover:bg-gray-700 border-gray-600">
+                <TableHead className="text-gray-200 font-semibold">Name</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Email</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Reg No</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Department</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Year</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Room</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Fee Status</TableHead>
+                <TableHead className="text-gray-200 font-semibold">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredStudents.map((student) => (
+                <TableRow key={student._id} className="hover:bg-gray-700 border-gray-600 transition-colors">
+                  <TableCell className="text-white font-medium">{student.user.name}</TableCell>
+                  <TableCell className="text-gray-300">{student.user.email}</TableCell>
+                  <TableCell className="text-white">{student.regNo}</TableCell>
+                  <TableCell className="text-gray-300">{student.department || "N/A"}</TableCell>
+                  <TableCell className="text-gray-300">{student.year ? `${student.year}st Year` : "N/A"}</TableCell>
+                  <TableCell className="text-gray-300">
+                    {student.room ? `${student.room.block}-${student.room.roomNumber}` : "Not Assigned"}
+                  </TableCell>
+                  <TableCell>
+                    <select
+                      value={student.feeStatus || "unpaid"}
+                      onChange={(e) => updateFeeStatus(student._id, e.target.value)}
+                      className="bg-gray-700 border border-gray-600 text-white px-3 py-1 rounded text-sm focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="paid">Paid</option>
+                      <option value="unpaid">Unpaid</option>
+                    </select>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleEdit(student)}
+                        className="p-2 text-gray-400 hover:text-blue-400 hover:bg-gray-600 rounded-lg transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setDeletingStudent(student)}
+                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-600 rounded-lg transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Edit Dialog */}
+        <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+          <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold text-white">Edit Student</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleEditSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="editName" className="text-gray-200">Name</Label>
+                  <Input
+                    id="editName"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 mt-1"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="editEmail" className="text-gray-200">Email</Label>
+                  <Input
+                    id="editEmail"
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 mt-1"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="editRegNo" className="text-gray-200">Registration Number</Label>
+                  <Input
+                    id="editRegNo"
+                    value={editRegNo}
+                    onChange={(e) => setEditRegNo(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 mt-1"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="editDepartment" className="text-gray-200">Department</Label>
+                  <Select value={editDepartment} onValueChange={setEditDepartment}>
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white focus:ring-2 focus:ring-blue-500 mt-1">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="unpaid">Unpaid</SelectItem>
+                    <SelectContent className="bg-gray-700 border-gray-600">
+                      <SelectItem value="Computer Science" className="text-white hover:bg-gray-600">CSE</SelectItem>
+                      <SelectItem value="Electrical Engineering" className="text-white hover:bg-gray-600">ECE</SelectItem>
+                      <SelectItem value="Electrical Engineering" className="text-white hover:bg-gray-600">EEE</SelectItem>
+                      <SelectItem value="Mechanical Engineering" className="text-white hover:bg-gray-600">ME</SelectItem>
+                      <SelectItem value="Civil Engineering" className="text-white hover:bg-gray-600">CE</SelectItem>
                     </SelectContent>
                   </Select>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleEdit(student)}
-                      className="p-2 text-[#64748b] hover:text-[#4f46e5] hover:bg-indigo-50 rounded-lg transition-colors"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setDeletingStudent(student)}
-                      className="p-2 text-[#64748b] hover:text-[#ef4444] hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
-
-      {/* Edit Dialog */}
-      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="bg-white border border-[#e2e8f0] rounded-2xl max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-[#0a0a0a]">Edit Student</DialogTitle>
-          </DialogHeader>
-
-          <form onSubmit={handleEditSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="editName" className="text-[#64748b]">Name</Label>
-              <Input
-                id="editName"
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                required
-                className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="editEmail" className="text-[#64748b]">Email</Label>
-              <Input
-                id="editEmail"
-                type="email"
-                value={editEmail}
-                onChange={(e) => setEditEmail(e.target.value)}
-                required
-                className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="editRegNo" className="text-[#64748b]">Registration Number</Label>
-              <Input
-                id="editRegNo"
-                type="text"
-                value={editRegNo}
-                onChange={(e) => setEditRegNo(e.target.value)}
-                required
-                className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="editDepartment" className="text-[#64748b]">Department</Label>
-              <Select value={editDepartment} onValueChange={setEditDepartment}>
-                <SelectTrigger className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]">
-                  <SelectValue placeholder="Select department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CSE">CSE</SelectItem>
-                  <SelectItem value="ECE">ECE</SelectItem>
-                  <SelectItem value="ME">ME</SelectItem>
-                  <SelectItem value="CE">CE</SelectItem>
-                  <SelectItem value="IT">IT</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="editYear" className="text-[#64748b]">Year</Label>
-              <Select value={editYear} onValueChange={setEditYear}>
-                <SelectTrigger className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]">
-                  <SelectValue placeholder="Select year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="editPhone" className="text-[#64748b]">Phone</Label>
-              <Input
-                id="editPhone"
-                type="text"
-                value={editPhone}
-                onChange={(e) => setEditPhone(e.target.value)}
-                className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="editParentPhone" className="text-[#64748b]">Parent Phone</Label>
-              <Input
-                id="editParentPhone"
-                type="text"
-                value={editParentPhone}
-                onChange={(e) => setEditParentPhone(e.target.value)}
-                className="border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
-              />
-            </div>
-
-            <DialogFooter className="flex gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowEditModal(false)}
-                className="border-[#e2e8f0] text-[#64748b] hover:bg-[#f8fafc] flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="bg-[#4f46e5] hover:bg-[#4338ca] text-white flex-1"
-              >
-                Save Changes
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+                </div>
+                <div>
+                  <Label htmlFor="editYear" className="text-gray-200">Year</Label>
+                  <Select value={editYear} onValueChange={setEditYear}>
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white focus:ring-2 focus:ring-blue-500 mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-700 border-gray-600">
+                      <SelectItem value="1" className="text-white hover:bg-gray-600">1st Year</SelectItem>
+                      <SelectItem value="2" className="text-white hover:bg-gray-600">2nd Year</SelectItem>
+                      <SelectItem value="3" className="text-white hover:bg-gray-600">3rd Year</SelectItem>
+                      <SelectItem value="4" className="text-white hover:bg-gray-600">4th Year</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editPhone" className="text-gray-200">Phone</Label>
+                  <Input
+                    id="editPhone"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 mt-1"
+                  />
+                </div>
+              
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  className="bg-gray-700 border border-gray-600 text-gray-300 hover:bg-gray-600"
+                  onClick={() => setShowEditModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Update Student
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
 
       {/* Delete Confirmation */}
       {deletingStudent && (
@@ -474,6 +438,7 @@ function Students() {
         </Dialog>
       )}
     </div>
+  </div>
   );
 }
 

@@ -50,16 +50,18 @@ export default function RoomInfo() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingIcon />
+      <div className="flex justify-center items-center min-h-screen bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (error || !student) {
     return (
-      <div className="text-center text-red-600">
-        {error || "Failed to load student data"}
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="text-center text-red-400">
+          {error || "Failed to load student data"}
+        </div>
       </div>
     );
   }
@@ -78,30 +80,30 @@ export default function RoomInfo() {
   if (!roomDetails) {
     return (
       <div className="text-center py-12">
-        <Home className="w-16 h-16 text-[#64748b] mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-[#0a0a0a] mb-2">No Room Assigned</h2>
-        <p className="text-[#64748b]">You haven't been assigned a room yet. Please contact the warden.</p>
+        <Home className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-white mb-2">No Room Assigned</h2>
+        <p className="text-gray-400">You haven't been assigned a room yet. Please contact the warden.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gray-900 text-white p-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2">Room Information</h1>
-        <p className="text-[#64748b]">View your room details and roommate information</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Room Information</h1>
+        <p className="text-gray-400">View your room details and roommate information</p>
       </div>
 
       <div className="">
         {/* Room Details */}
-        <Card className="lg:col-span-2">
+        <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Room Details</CardTitle>
+              <CardTitle className="text-white">Room Details</CardTitle>
               <div className="flex items-center gap-2">
-                <Home className="w-5 h-5 text-[#4f46e5]" />
-                <span className="text-2xl font-bold text-[#4f46e5]">
+                <Home className="w-5 h-5 text-blue-400" />
+                <span className="text-2xl font-bold text-blue-400">
                   {roomDetails.block}-{roomDetails.roomNo}
                 </span>
               </div>
@@ -109,31 +111,31 @@ export default function RoomInfo() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 bg-[#f8fafc] rounded-xl">
-                <p className="text-sm text-[#64748b] mb-1">Block</p>
-                <p className="text-xl font-bold text-[#0a0a0a]">{roomDetails.block}</p>
+              <div className="p-4 bg-gray-700 rounded-xl">
+                <p className="text-sm text-gray-400 mb-1">Block</p>
+                <p className="text-xl font-bold text-white">{roomDetails.block}</p>
               </div>
-              <div className="p-4 bg-[#f8fafc] rounded-xl">
-                <p className="text-sm text-[#64748b] mb-1">Room No</p>
-                <p className="text-xl font-bold text-[#0a0a0a]">{roomDetails.roomNo}</p>
+              <div className="p-4 bg-gray-700 rounded-xl">
+                <p className="text-sm text-gray-400 mb-1">Room No</p>
+                <p className="text-xl font-bold text-white">{roomDetails.roomNo}</p>
               </div>
-              <div className="p-4 bg-[#f8fafc] rounded-xl">
-                <p className="text-sm text-[#64748b] mb-1">Floor</p>
-                <p className="text-xl font-bold text-[#0a0a0a]">{roomDetails.floor}</p>
+              <div className="p-4 bg-gray-700 rounded-xl">
+                <p className="text-sm text-gray-400 mb-1">Floor</p>
+                <p className="text-xl font-bold text-white">{roomDetails.floor}</p>
               </div>
-              <div className="p-4 bg-[#f8fafc] rounded-xl">
-                <p className="text-sm text-[#64748b] mb-1">Occupancy</p>
-                <p className="text-xl font-bold text-[#0a0a0a]">
+              <div className="p-4 bg-gray-700 rounded-xl">
+                <p className="text-sm text-gray-400 mb-1">Occupancy</p>
+                <p className="text-xl font-bold text-white">
                   {roomDetails.occupied}/{roomDetails.capacity}
                 </p>
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold text-[#0a0a0a] mb-3">Amenities</h4>
+              <h4 className="font-semibold text-white mb-3">Amenities</h4>
               <div className="flex flex-wrap gap-2">
                 {roomDetails.amenities.map((amenity, index) => (
-                  <Badge key={index} variant="default">
+                  <Badge key={index} className="bg-blue-600 text-white">
                     {amenity}
                   </Badge>
                 ))}
@@ -141,28 +143,28 @@ export default function RoomInfo() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-[#0a0a0a] mb-3">Roommates</h4>
+              <h4 className="font-semibold text-white mb-3">Roommates</h4>
               <div className="space-y-3">
                 {roommates.length > 0 ? (
                   roommates.map((roommate) => (
                     <div
                       key={roommate._id}
-                      className="flex items-center gap-4 p-4 bg-[#f8fafc] rounded-xl hover:bg-[#f1f5f9] transition-colors"
+                      className="flex items-center gap-4 p-4 bg-gray-700 rounded-xl hover:bg-gray-600 transition-colors"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
                         {roommate.user.name.split(' ').map((n: string) => n[0]).join('')}
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-[#0a0a0a]">{roommate.user.name}</p>
-                        <p className="text-sm text-[#64748b]">
+                        <p className="font-semibold text-white">{roommate.user.name}</p>
+                        <p className="text-sm text-gray-400">
                           {roommate.department} • Year {roommate.year}
                         </p>
                       </div>
-                      <p className="text-sm text-[#64748b]">{roommate.phone}</p>
+                      <p className="text-sm text-gray-400">{roommate.phone}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[#64748b]">No other roommates currently.</p>
+                  <p className="text-gray-400">No other roommates currently.</p>
                 )}
               </div>
             </div>

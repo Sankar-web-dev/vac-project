@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Building, Mail, User, Edit, Phone } from "lucide-react";
+import { Building, Mail, User, Edit, Phone, DollarSign } from "lucide-react";
 import API from "@/lib/api";
 import { LoadingIcon } from "@/components/ui/loading-icon";
 
@@ -72,30 +72,34 @@ export default function StudentProfile() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingIcon />
+      <div className="flex justify-center items-center min-h-screen bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center text-red-600">
-        {error}
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="text-center text-red-400">
+          {error}
+        </div>
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="text-center text-gray-600">
-        No profile data available
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="text-center text-gray-400">
+          No profile data available
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gray-900 text-white p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -104,41 +108,43 @@ export default function StudentProfile() {
             {profile.user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2">My Profile</h1>
-            <p className="text-[#64748b]">View and manage your profile information</p>
+            <h1 className="text-3xl font-bold text-white mb-2">My Profile</h1>
+            <p className="text-gray-400">View and manage your profile information</p>
           </div>
         </div>
         <Dialog open={isEditing} onOpenChange={setIsEditing}>
           <DialogTrigger asChild>
           
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-gray-800 border-gray-700">
             <DialogHeader>
-              <DialogTitle>Edit Profile</DialogTitle>
+              <DialogTitle className="text-white">Edit Profile</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name" className="text-gray-300">Name</Label>
                 <Input
                   id="name"
                   value={editData.name}
                   onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-gray-300">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={editData.email}
                   onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                  className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
               <div className="flex gap-3">
-                <Button onClick={() => setIsEditing(false)} variant="ghost" className="flex-1">
+                <Button onClick={() => setIsEditing(false)} className="flex-1 bg-gray-700 border border-gray-600 text-gray-300 hover:bg-gray-600">
                   Cancel
                 </Button>
-                <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
+                <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
                   Save Changes
                 </Button>
               </div>
@@ -148,9 +154,9 @@ export default function StudentProfile() {
       </div>
 
       {/* Profile Card */}
-      <Card>
+      <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="text-white flex items-center gap-2">
             <User className="w-5 h-5" />
             Profile Information
           </CardTitle>
@@ -158,46 +164,46 @@ export default function StudentProfile() {
         <CardContent className="space-y-4">
           <div className="space-y-6">
             {/* Personal Information */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100">
-              <h3 className="text-lg font-semibold text-[#0a0a0a] flex items-center gap-2 mb-4">
-                <User className="w-5 h-5 text-blue-600" />
+            <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                <User className="w-5 h-5 text-blue-400" />
                 Personal Details
               </h3>
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                  <span className="text-sm font-medium text-[#64748b]">Name</span>
-                  <span className="text-[#0a0a0a] font-medium">{profile.user.name}</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Name</span>
+                  <span className="text-white font-medium">{profile.user.name}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                  <span className="text-sm font-medium text-[#64748b]">Email</span>
-                  <span className="text-[#0a0a0a] flex items-center gap-1">
-                    <Mail className="w-4 h-4 text-blue-500" />
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Email</span>
+                  <span className="text-white flex items-center gap-1">
+                    <Mail className="w-4 h-4 text-blue-400" />
                     {profile.user.email}
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                  <span className="text-sm font-medium text-[#64748b]">Registration Number</span>
-                  <span className="text-[#0a0a0a] font-medium">{profile.regNo}</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Registration Number</span>
+                  <span className="text-white font-medium">{profile.regNo}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                  <span className="text-sm font-medium text-[#64748b]">Department</span>
-                  <span className="text-[#0a0a0a] font-medium">{profile.department || 'N/A'}</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Department</span>
+                  <span className="text-white font-medium">{profile.department || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                  <span className="text-sm font-medium text-[#64748b]">Year</span>
-                  <span className="text-[#0a0a0a] font-medium">{profile.year || 'N/A'}</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Year</span>
+                  <span className="text-white font-medium">{profile.year || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                  <span className="text-sm font-medium text-[#64748b]">Phone</span>
-                  <span className="text-[#0a0a0a] flex items-center gap-1 font-medium">
-                    <Phone className="w-4 h-4 text-blue-500" />
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Phone</span>
+                  <span className="text-white flex items-center gap-1 font-medium">
+                    <Phone className="w-4 h-4 text-blue-400" />
                     {profile.phone || 'N/A'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-sm font-medium text-[#64748b]">Parent Phone</span>
-                  <span className="text-[#0a0a0a] flex items-center gap-1 font-medium">
-                    <Phone className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-400">Parent Phone</span>
+                  <span className="text-white flex items-center gap-1 font-medium">
+                    <Phone className="w-4 h-4 text-blue-400" />
                     {profile.parentPhone || 'N/A'}
                   </span>
                 </div>
@@ -205,24 +211,32 @@ export default function StudentProfile() {
             </div>
 
             {/* Room Information */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100">
-              <h3 className="text-lg font-semibold text-[#0a0a0a] flex items-center gap-2 mb-4">
-                <Building className="w-5 h-5 text-green-600" />
+            <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                <Building className="w-5 h-5 text-green-400" />
                 Room Details
               </h3>
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="flex justify-between items-center py-2 border-b border-green-100">
-                  <span className="text-sm font-medium text-[#64748b]">Room Number</span>
-                  <span className="text-[#0a0a0a] font-medium">{profile.room.roomNumber}</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Room Number</span>
+                  <span className="text-white font-medium">{profile.room.roomNumber}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-green-100">
-                  <span className="text-sm font-medium text-[#64748b]">Block</span>
-                  <span className="text-[#0a0a0a] font-medium">{profile.room.block}</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-600">
+                  <span className="text-sm font-medium text-gray-400">Block</span>
+                  <span className="text-white font-medium">{profile.room.block}</span>
                 </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-sm font-medium text-[#64748b]">Fee Status</span>
-                  {getFeeBadge(profile.feeStatus)}
-                </div>
+              </div>
+            </div>
+
+            {/* Fee Status */}
+            <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                <DollarSign className="w-5 h-5 text-yellow-400" />
+                Fee Status
+              </h3>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-400">Current Status</span>
+                {getFeeBadge(profile.feeStatus)}
               </div>
             </div>
           </div>

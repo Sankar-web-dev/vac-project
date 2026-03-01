@@ -49,12 +49,12 @@ export default function StudentComplaints() {
     : complaints.filter(c => c.status === statusFilter);
 
   const getStatusBadge = (status: string) => {
-    const variants: any = {
-      pending: 'warning',
-      'in-progress': 'info',
-      resolved: 'success',
+    const classes: any = {
+      pending: 'bg-yellow-900 text-yellow-200 border border-yellow-700',
+      'in-progress': 'bg-blue-900 text-blue-200 border border-blue-700',
+      resolved: 'bg-green-900 text-green-200 border border-green-700',
     };
-    return <Badge variant={variants[status]}>{status.replace('-', ' ')}</Badge>;
+    return <Badge className={classes[status] || 'bg-gray-900 text-gray-200'}>{status.replace('-', ' ')}</Badge>;
   };
 
   const getPriorityBadge = (priority: string) => {
@@ -68,30 +68,32 @@ export default function StudentComplaints() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingIcon />
+      <div className="flex justify-center items-center min-h-screen bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center text-red-600">
-        {error}
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="text-center text-red-400">
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gray-900 text-white p-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2">My Complaints</h1>
-          <p className="text-[#64748b]">Track and manage your complaints</p>
+          <h1 className="text-3xl font-bold text-white mb-2">My Complaints</h1>
+          <p className="text-gray-400">Track and manage your complaints</p>
         </div>
         <Link href="/student/complaints/new">
-          <Button>
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
             <Plus className="w-5 h-5" />
             New Complaint
           </Button>
@@ -99,62 +101,49 @@ export default function StudentComplaints() {
       </div>
 
       {/* Filters */}
-      <Card className="p-4">
+      <Card className="p-4 bg-gray-800 border-gray-700 mb-8">
         <div className="flex items-center gap-3">
-          <Filter className="w-5 h-5 text-[#64748b]" />
+          <Filter className="w-5 h-5 text-gray-400" />
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="max-w-xs">
+            <SelectTrigger className="max-w-xs bg-gray-700 border-gray-600 text-white">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in-progress">In Progress</SelectItem>
-              <SelectItem value="resolved">Resolved</SelectItem>
+            <SelectContent className="bg-gray-700 border-gray-600">
+              <SelectItem value="all" className="text-white hover:bg-gray-600">All Status</SelectItem>
+              <SelectItem value="pending" className="text-white hover:bg-gray-600">Pending</SelectItem>
+              <SelectItem value="in-progress" className="text-white hover:bg-gray-600">In Progress</SelectItem>
+              <SelectItem value="resolved" className="text-white hover:bg-gray-600">Resolved</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </Card>
 
       {/* Table */}
-      <Card>
-        {filteredComplaints.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Category</TableHead>
-           
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Description</TableHead>
+      <Card className="bg-gray-800 border-gray-700">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-700 border-gray-600">
+              <TableHead className="text-gray-300">ID</TableHead>
+              <TableHead className="text-gray-300">Category</TableHead>
+              <TableHead className="text-gray-300">Status</TableHead>
+              <TableHead className="text-gray-300">Date</TableHead>
+              <TableHead className="text-gray-300">Description</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredComplaints.map((complaint) => (
+              <TableRow key={complaint._id} className="border-gray-700">
+                <TableCell className="text-white">
+                  <span className="font-medium text-blue-400">{complaint._id}</span>
+                </TableCell>
+                <TableCell className="text-white">{getStatusBadge(complaint.category)}</TableCell>
+                <TableCell className="text-white">{getStatusBadge(complaint.status)}</TableCell>
+                <TableCell className="text-white">{new Date(complaint.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell className="text-white max-w-xs truncate">{complaint.description}</TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredComplaints.map((complaint) => (
-                <TableRow key={complaint._id}>
-                  <TableCell>
-                    <span className="font-medium text-[#4f46e5]">{complaint._id}</span>
-                  </TableCell>
-                
-                  <TableCell>{getStatusBadge(complaint.category)}</TableCell> 
-                  <TableCell>{getStatusBadge(complaint.status)}</TableCell>
-                  <TableCell>{new Date(complaint.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell className="max-w-xs truncate">{complaint.description}</TableCell>
-                  
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-[#f1f5f9] rounded-full flex items-center justify-center mx-auto mb-4">
-              <Filter className="w-8 h-8 text-[#64748b]" />
-            </div>
-            <h3 className="text-lg font-semibold text-[#0a0a0a] mb-2">No complaints found</h3>
-            <p className="text-[#64748b]">Try adjusting your filters</p>
-          </div>
-        )}
+            ))}
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );

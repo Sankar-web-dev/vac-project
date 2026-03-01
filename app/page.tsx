@@ -46,18 +46,18 @@ export default function Landing() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fafafa] via-white to-indigo-50">
+    <div className="min-h-screen bg-gray-900">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 backdrop-blur-lg bg-white/80 border-b border-[#e2e8f0]">
+      <nav className="sticky top-0 z-50 backdrop-blur-lg bg-gray-800/80 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#4f46e5] to-[#6366f1] rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
               <Building className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-[#0a0a0a]">Hostel Management</span>
+            <span className="text-xl font-bold text-white">Hostel Management</span>
           </Link>
           <Link href="/login">
-            <Button className="bg-indigo-600 hover:bg-indigo-700">Login</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">Login</Button>
           </Link>
         </div>
       </nav>
@@ -65,32 +65,32 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-full">
-            <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-indigo-700">Modern Hostel Management Platform</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-600 rounded-full">
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+            <span className="text-sm font-medium text-gray-300">Modern Hostel Management Platform</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-[#0a0a0a] leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
             Smart Hostel Management
             <br />
-            <span className="bg-gradient-to-r from-[#4f46e5] to-[#6366f1] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
               Made Simple
             </span>
           </h1>
 
-          <p className="text-xl text-[#64748b] max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Streamline your hostel operations with our comprehensive platform for room allocation,
             student management, and complaint resolution—all in one place.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/register">
-              <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8">
                 Get Started
               </Button>
             </Link>
             <Link href="/login">
-              <Button variant="outline" size="lg" className="border-indigo-200 text-indigo-700 hover:bg-indigo-50 px-8">
+              <Button variant="outline" size="lg" className="border-gray-600 text-white bg-gray-800 hover:bg-gray-700 px-8">
                 Login
               </Button>
             </Link>
@@ -102,14 +102,14 @@ export default function Landing() {
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-indigo-100 bg-white/70 backdrop-blur-sm">
+              <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-gray-700 bg-gray-800">
                 <CardContent className="flex items-center gap-4 p-6">
                   <div className={`w-14 h-14 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <Icon className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm text-[#64748b]">{stat.label}</p>
-                    <p className="text-3xl font-bold text-[#0a0a0a]">{stat.value}</p>
+                    <p className="text-sm text-gray-400">{stat.label}</p>
+                    <p className="text-3xl font-bold text-white">{stat.value}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -121,8 +121,8 @@ export default function Landing() {
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center space-y-4 mb-16">
-          <h2 className="text-4xl font-bold text-[#0a0a0a]">Everything You Need</h2>
-          <p className="text-lg text-[#64748b] max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold text-white">Everything You Need</h2>
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Powerful features designed to make hostel management effortless and efficient.
           </p>
         </div>
@@ -131,13 +131,13 @@ export default function Landing() {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-indigo-100 bg-white/70 backdrop-blur-sm">
+              <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-gray-700 bg-gray-800">
                 <CardContent className="space-y-4 p-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-[#0a0a0a]">{feature.title}</h3>
-                  <p className="text-[#64748b] leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-white">{feature.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             );
@@ -146,16 +146,16 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#e2e8f0] bg-white">
+      <footer className="border-t border-gray-700 bg-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#4f46e5] to-[#6366f1] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <Building className="w-5 h-5 text-white" />
               </div>
-              <span className="font-semibold text-[#0a0a0a]">Hostel Management System</span>
+              <span className="font-semibold text-white">Hostel Management System</span>
             </div>
-            <p className="text-sm text-[#64748b]">
+            <p className="text-sm text-gray-400">
               2026 HMS. All rights reserved.
             </p>
           </div>

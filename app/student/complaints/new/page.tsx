@@ -48,85 +48,86 @@ export default function NewComplaint() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2">Submit Complaint</h1>
-        <p className="text-[#64748b]">Fill out the form below to submit a new complaint</p>
+    <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Submit Complaint</h1>
+          <p className="text-gray-400">Fill out the form below to submit a new complaint</p>
+        </div>
+
+        {/* Form */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white">Complaint Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">Category</label>
+                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectItem value="maintenance" className="text-white hover:bg-gray-600">Maintenance</SelectItem>
+                    <SelectItem value="cleaning" className="text-white hover:bg-gray-600">Cleanliness</SelectItem>
+                    <SelectItem value="electricity" className="text-white hover:bg-gray-600">Electrical</SelectItem>
+                    <SelectItem value="plumbing" className="text-white hover:bg-gray-600">Plumbing</SelectItem>
+                    <SelectItem value="other" className="text-white hover:bg-gray-600">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">Description</label>
+                <textarea
+                  placeholder="Describe your complaint in detail..."
+                  value={formData.description}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                  rows={6}
+                  className="w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  className="flex-1 bg-gray-700 border border-gray-600 text-gray-300 hover:bg-gray-600"
+                  onClick={() => router.push('/student/complaints')}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  {loading ? 'Submitting...' : 'Submit Complaint'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Success Modal */}
+        <Dialog open={showSuccess} onOpenChange={() => setShowSuccess(false)}>
+          <DialogContent className="bg-gray-800 border-gray-700 text-white sm:max-w-md">
+            <div className="text-center space-y-4 py-4">
+              <div className="w-20 h-20 bg-green-900 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-10 h-10 text-green-400" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white">Complaint Submitted!</h3>
+                <p className="text-gray-400">
+                  Your complaint has been submitted successfully. You will be notified of updates.
+                </p>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Form */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Complaint Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0a0a0a]">Category</label>
-              <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="maintenance">Maintenance</SelectItem>
-                  <SelectItem value="cleaning">Cleanliness</SelectItem>
-                  <SelectItem value="electricity">Electrical</SelectItem>
-                  <SelectItem value="plumbing">Plumbing</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#0a0a0a]">Description</label>
-              <textarea
-                placeholder="Describe your complaint in detail..."
-                value={formData.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, description: e.target.value })}
-                required
-                rows={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => router.push('/student/complaints')}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={loading}
-                className="flex-1"
-              >
-                {loading ? 'Submitting...' : 'Submit Complaint'}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* Success Modal */}
-      <Dialog open={showSuccess} onOpenChange={() => setShowSuccess(false)}>
-        <DialogContent className="sm:max-w-md">
-          <div className="text-center space-y-4 py-4">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="w-10 h-10 text-green-600" />
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold text-[#0a0a0a]">Complaint Submitted!</h3>
-              <p className="text-[#64748b]">
-                Your complaint has been submitted successfully. You will be notified of updates.
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

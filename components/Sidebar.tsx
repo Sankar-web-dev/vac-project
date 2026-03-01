@@ -46,12 +46,12 @@ export const Sidebar = ({ role }: SidebarProps) => {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-[#e2e8f0]">
+      <div className="px-6 py-5 border-b border-gray-700">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#4f46e5] to-[#6366f1] rounded-lg flex items-center justify-center">
-            <Building className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center">
+            <Building className="w-5 h-5 text-blue-400" />
           </div>
-          <span className="text-lg font-semibold text-[#0a0a0a]">HMS</span>
+          <span className="text-lg font-semibold text-white">HMS</span>
         </Link>
       </div>
 
@@ -70,8 +70,8 @@ export const Sidebar = ({ role }: SidebarProps) => {
                 flex items-center gap-3 px-3 py-2.5 rounded-xl
                 transition-all duration-200
                 ${active
-                  ? 'bg-gradient-to-r from-[#4f46e5] to-[#6366f1] text-white shadow-lg shadow-indigo-500/30'
-                  : 'text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0a0a0a]'
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                  : 'text-gray-400 hover:bg-gray-700 hover:text-white'
                 }
               `}
             >
@@ -83,10 +83,10 @@ export const Sidebar = ({ role }: SidebarProps) => {
       </nav>
 
       {/* User Section */}
-      <div className="px-3 py-4 border-t border-[#e2e8f0]">
+      <div className="px-3 py-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0a0a0a] transition-all duration-200 w-full text-left"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-red-600 hover:text-white transition-all duration-200 w-full text-left"
         >
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
@@ -100,13 +100,13 @@ export const Sidebar = ({ role }: SidebarProps) => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-lg border border-[#e2e8f0]"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gray-900 rounded-xl shadow-lg border border-gray-700"
       >
-        {isMobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {isMobileOpen ? <X className="w-7 h-7 text-white" /> : <Menu className="w-7 h-7 text-white" />}
       </button>
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex w-64 h-screen bg-white border-r border-[#e2e8f0] flex-col">
+      <div className="hidden lg:flex w-64 h-screen bg-gray-800 border-r border-gray-700 flex-col">
         <SidebarContent />
       </div>
 
@@ -117,7 +117,7 @@ export const Sidebar = ({ role }: SidebarProps) => {
             className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
             onClick={() => setIsMobileOpen(false)}
           />
-          <div className="lg:hidden fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-[#e2e8f0] flex flex-col z-40 animate-in slide-in-from-left duration-200">
+          <div className="lg:hidden fixed left-0 top-0 bottom-0 w-80 bg-gray-800 border-r border-gray-700 flex flex-col z-40 animate-in slide-in-from-left animate-out slide-out-to-left duration-200">
             <SidebarContent />
           </div>
         </>

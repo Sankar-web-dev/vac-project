@@ -39,27 +39,27 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4f46e5] via-[#6366f1] to-[#8b5cf6] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
-            <Building className="w-7 h-7 text-[#4f46e5]" />
+          <div className="w-12 h-12 bg-gray-800 rounded-2xl flex items-center justify-center shadow-2xl">
+            <Building className="w-7 h-7 text-blue-400" />
           </div>
           <span className="text-2xl font-bold text-white">HMS</span>
         </Link>
 
         {/* Login Card */}
-        <Card className="backdrop-blur-xl bg-white/95 shadow-2xl">
+        <Card className="bg-gray-800 border-gray-700 shadow-2xl">
           <CardContent className="space-y-6 p-8">
             <div className="text-center space-y-2">
-              <h1 className="text-2xl font-bold text-[#0a0a0a]">Welcome Back</h1>
-              <p className="text-[#64748b]">Sign in to your account to continue</p>
+              <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
+              <p className="text-gray-400">Sign in to your account to continue</p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#64748b]" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="email"
                   type="email"
@@ -68,12 +68,12 @@ function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   required
-                  className="pl-12 border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
+                  className="pl-12 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#64748b]" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="password"
                   type="password"
@@ -82,19 +82,24 @@ function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
-                  className="pl-12 border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]"
+                  className="pl-12 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-[#4f46e5] hover:bg-[#4338ca] text-white rounded-xl"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
               >
                 Sign In
               </Button>
             </form>
 
-           
+            <p className="text-center text-sm text-gray-400">
+              Don't have an account?{" "}
+              <Link href="/register" className="text-blue-400 font-medium hover:underline">
+                Sign up here
+              </Link>
+            </p>
           </CardContent>
         </Card>
       </div>
