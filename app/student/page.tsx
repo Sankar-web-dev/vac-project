@@ -206,13 +206,15 @@ export default function StudentDashboard() {
                 {complaints.slice(0, 3).map((complaint) => (
                   <div
                     key={complaint._id}
-                    className="flex items-center justify-between p-3 bg-gray-700 rounded-xl hover:bg-gray-600 transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-700 rounded-xl hover:bg-gray-600 transition-colors space-y-2 sm:space-y-0"
                   >
                     <div className="space-y-1">
                       <p className="font-medium text-white">{complaint._id}</p>
                       <p className="text-sm text-gray-400">{complaint.category}</p>
                     </div>
-                    {getStatusBadge(complaint.status)}
+                    <div className="flex-shrink-0">
+                      {getStatusBadge(complaint.status)}
+                    </div>
                   </div>
                 ))}
                 <Link href="/student/complaints">

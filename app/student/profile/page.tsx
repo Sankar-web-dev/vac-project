@@ -169,7 +169,7 @@ export default function StudentProfile() {
                 <User className="w-5 h-5 text-blue-400" />
                 Personal Details
               </h3>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                 <div className="flex justify-between items-center py-2 border-b border-gray-600">
                   <span className="text-sm font-medium text-gray-400">Name</span>
                   <span className="text-white font-medium">{profile.user.name}</span>
@@ -216,7 +216,7 @@ export default function StudentProfile() {
                 <Building className="w-5 h-5 text-green-400" />
                 Room Details
               </h3>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                 <div className="flex justify-between items-center py-2 border-b border-gray-600">
                   <span className="text-sm font-medium text-gray-400">Room Number</span>
                   <span className="text-white font-medium">{profile.room.roomNumber}</span>

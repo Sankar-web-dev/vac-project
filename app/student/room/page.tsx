@@ -149,18 +149,20 @@ export default function RoomInfo() {
                   roommates.map((roommate) => (
                     <div
                       key={roommate._id}
-                      className="flex items-center gap-4 p-4 bg-gray-700 rounded-xl hover:bg-gray-600 transition-colors"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-gray-700 rounded-xl hover:bg-gray-600 transition-colors"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                        {roommate.user.name.split(' ').map((n: string) => n[0]).join('')}
+                      <div className="flex items-center gap-4 flex-shrink-0">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                          {roommate.user.name.split(' ').map((n: string) => n[0]).join('')}
+                        </div>
+                        <div className="flex-1 sm:flex-shrink-0">
+                          <p className="font-semibold text-white">{roommate.user.name}</p>
+                          <p className="text-sm text-gray-400">
+                            {roommate.department} • Year {roommate.year}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-semibold text-white">{roommate.user.name}</p>
-                        <p className="text-sm text-gray-400">
-                          {roommate.department} • Year {roommate.year}
-                        </p>
-                      </div>
-                      <p className="text-sm text-gray-400">{roommate.phone}</p>
+                      <p className="text-sm text-gray-400 flex-shrink-0">{roommate.phone}</p>
                     </div>
                   ))
                 ) : (
