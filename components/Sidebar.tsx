@@ -100,7 +100,7 @@ export const Sidebar = ({ role }: SidebarProps) => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gray-900 rounded-xl shadow-lg border border-gray-700"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-blue-600 rounded-xl shadow-lg border border-gray-700"
       >
         {isMobileOpen ? <X className="w-7 h-7 text-white" /> : <Menu className="w-7 h-7 text-white" />}
       </button>
@@ -117,7 +117,7 @@ export const Sidebar = ({ role }: SidebarProps) => {
             className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
             onClick={() => setIsMobileOpen(false)}
           />
-          <div className="lg:hidden fixed left-0 top-0 bottom-0 w-80 bg-gray-800 border-r border-gray-700 flex flex-col z-40 animate-in slide-in-from-left animate-out slide-out-to-left duration-200">
+          <div className="lg:hidden fixed left-0 top-0 bottom-0 w-72 bg-gray-800 border-r border-gray-700 flex flex-col z-40 animate-in slide-in-from-left animate-out slide-out-to-left duration-200">
             <SidebarContent />
           </div>
         </>
